@@ -6,7 +6,7 @@ import org.hibernate.cfg.Configuration;
 
 import com.luv2code.hibernate.demo.entity.Student;
 
-public class CreateStudentDemo {
+public class ReadStudentDemo {
 	public static void main(String[] args) {
 		// create session factory
 		SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Student.class)
@@ -17,16 +17,27 @@ public class CreateStudentDemo {
 		try {
 			// create a student object
 			System.out.println("Creating new student object...");
-			Student tempStudent2 = new Student("Taseer", "Ahmed", "thasirahmed@gmail.com");
-			Student tempStudent3 = new Student("Foo", "Bar", "foobar@gmail.com");
+			Student tempStudent = new Student("MIcky", "Mouse", "mouse@gmail.com");
 			System.out.println("created");
 			// start the transaction
 			session.beginTransaction();
 			// save the student object
 			System.out.println("saving the students...");
-			session.save(tempStudent2);
-			session.save(tempStudent3);
+			System.out.println(tempStudent);
+			session.save(tempStudent);
 			// commit transaction
+			session.getTransaction().commit();
+			//MY NEW CODE
+			// find out the students primary key
+			System.out.println("Saved student generated id :" + tempStudent.getId());
+			//	now get a new session start a transaction
+			session = factory.getCurrentSession();
+			session.beginTransaction();
+			//retreive the student based on id:primary key
+			System.out.println("\ngetting student with id :"+tempStudent.getId());
+			Student myStudent = session.get(Student.class, tempStudent.getId()); 
+			System.out.println("Get Complete :"+ myStudent);
+			//commit the transaction
 			session.getTransaction().commit();
 			System.out.println("Done!...");
 		} finally {
